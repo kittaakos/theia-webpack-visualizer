@@ -25,7 +25,8 @@
   },
   "theiaExtensions": [
     {
-      "frontend": "lib/browser/theia-webpack-visualizer-frontend-module"
+      "frontend": "lib/browser/theia-webpack-visualizer-frontend-module",
+      "backend": "lib/node/theia-webpack-visualizer-backend-module"
     }
   ]
 }

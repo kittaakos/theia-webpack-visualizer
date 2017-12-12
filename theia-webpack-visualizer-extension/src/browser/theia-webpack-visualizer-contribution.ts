@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MessageService } from "@theia/core/lib/common";
-import { CommonMenus } from "@theia/core/lib/browser";
 import { NAVIGATOR_CONTEXT_MENU } from "@theia/navigator/lib/browser/navigator-menu";
+import { WebpackVisualizer } from "../common/index";
 
 export const TheiaWebpackVisualizerCommand = {
     id: 'TheiaWebpackVisualizer.command',
@@ -17,11 +17,17 @@ export class TheiaWebpackVisualizerCommandContribution implements CommandContrib
 
     constructor(
         @inject(MessageService) private readonly messageService: MessageService,
+        @inject(WebpackVisualizer) private readonly webstatService: WebpackVisualizer
     ) { }
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(TheiaWebpackVisualizerCommand, {
-            execute: () => this.messageService.info('Hello World!')
+            execute: () =>
+                this.webstatService.getDependencyData("Test").then(data => {
+                    if (data) {
+                        this.messageService.info(data);
+                    }
+                })
         });
     }
 }
@@ -30,10 +36,6 @@ export class TheiaWebpackVisualizerCommandContribution implements CommandContrib
 export class TheiaWebpackVisualizerMenuContribution implements MenuContribution {
 
     registerMenus(menus: MenuModelRegistry): void {
-        menus.registerMenuAction(CommonMenus.EDIT_FIND, {
-            commandId: TheiaWebpackVisualizerCommand.id,
-            label: 'Show Webpack Dependency Graph'
-        });
         menus.registerMenuAction(TheiaWebpackVisualizerContextMenu.SHOW, {
             commandId: TheiaWebpackVisualizerCommand.id
         })
