@@ -1,7 +1,8 @@
 import { injectable, inject } from "inversify";
-import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MessageService } from "@theia/core/lib/common";
+import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MessageService, SelectionService } from "@theia/core/lib/common";
 import { NAVIGATOR_CONTEXT_MENU } from "@theia/navigator/lib/browser/navigator-menu";
 import { WebpackVisualizer } from "../common/index";
+import { UriSelection } from '@theia/filesystem/lib/common/index';
 
 export const TheiaWebpackVisualizerCommand = {
     id: 'TheiaWebpackVisualizer.command',
@@ -17,17 +18,21 @@ export class TheiaWebpackVisualizerCommandContribution implements CommandContrib
 
     constructor(
         @inject(MessageService) private readonly messageService: MessageService,
+        @inject(SelectionService) private readonly selectionService: SelectionService,
         @inject(WebpackVisualizer) private readonly webstatService: WebpackVisualizer
     ) { }
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(TheiaWebpackVisualizerCommand, {
-            execute: () =>
-                this.webstatService.getDependencyData("Test").then(data => {
+            execute: async () => {
+                const selection = this.selectionService.selection
+                if (UriSelection.is(selection)) {
+                    const data = await this.webstatService.getDependencyData(selection.uri.toString());
                     if (data) {
                         this.messageService.info(data);
                     }
-                })
+                }
+            }
         });
     }
 }

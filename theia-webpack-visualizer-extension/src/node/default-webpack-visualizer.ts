@@ -1,11 +1,13 @@
 
 import { injectable } from "inversify";
 import { WebpackVisualizer } from "../common";
+import URI from "@theia/core/lib/common/uri";
 
 @injectable()
 export class DefaultWebpackVisualizer implements WebpackVisualizer {
 
-    getDependencyData(confFile: string): Promise<string | undefined> {
-       return Promise.resolve("{data:'maydata'}");
+    async getDependencyData(confFileUri: string): Promise<string | undefined> {
+       const selectedFile = new URI(confFileUri);
+       return "{data:'"+ selectedFile +"'}";
     }
 }
