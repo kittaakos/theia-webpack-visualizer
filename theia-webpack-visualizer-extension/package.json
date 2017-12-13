@@ -12,7 +12,8 @@
     "@theia/core": "latest",
     "@theia/messages": "latest",
     "@theia/navigator": "latest",
-    "webpack": "^2.6.1",
+    "@types/webpack": "^2.2.1",
+    "webpack": "^2.2.1",
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "devDependencies": {
