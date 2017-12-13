@@ -1,17 +1,17 @@
-
-
 /**
  * The JSON-RPC interface.
  */
-
-export const webpackServicePath = '/services/webpack-visulaizer';
-
+export const webpackServicePath = '/services/webpack-visualizer';
 export const WebpackVisualizer = Symbol('WebpackVisualizer');
 export interface WebpackVisualizer {
 
     /**
-     * Returns the dependency data
+     * Visualizes the `webpack` dependencies based on the given `webpack` configuration file.
      */
-    getDependencyData(confFile:string ): Promise<string | undefined>;
+    visualizeDependency(webpackConfigFileUri: string): Promise<VisualizerResult>;
 
 }
+
+export type VisualizerResult = 
+    { success: true, html: string } |
+    { success: false, message: string, stack?: string };
