@@ -29,7 +29,7 @@
     "clean": "rimraf lib",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "mocha -t 20000ms --require ts-node/register --watch-extensions ts \"./src/**/*.*spec.ts\""
+    "test": "mocha -t 20000ms --require ts-node/register --require reflect-metadata/Reflect --watch-extensions ts \"./src/**/*.*spec.ts\""
   },
   "theiaExtensions": [
     {

@@ -337,8 +337,8 @@
     "@types/node" "*"
 
 "@types/fs-extra@^4.0.2":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-4.0.6.tgz#f85ea84eaad555d7c58641ef2a50e9bb12d2cbb6"
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-4.0.7.tgz#02533262386b5a6b9a49797dc82feffdf269140a"
   dependencies:
     "@types/node" "*"
 
@@ -912,8 +912,8 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000782"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000782.tgz#d8815bce1578c350aced1132507301205e0fab53"
+  version "1.0.30000783"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000783.tgz#16b30d47266a4f515cc69ae0316b670c9603cdbe"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -3884,8 +3884,8 @@ postcss-minify-selectors@^2.0.4:
     postcss-selector-parser "^2.0.0"
 
 postcss-modules-extract-imports@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/postcss-modules-extract-imports/-/postcss-modules-extract-imports-1.2.0.tgz#66140ecece38ef06bf0d3e355d69bf59d141ea85"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/postcss-modules-extract-imports/-/postcss-modules-extract-imports-1.1.0.tgz#b614c9720be6816eaee35fb3a5faa1dba6a05ddb"
   dependencies:
     postcss "^6.0.1"
 
@@ -5362,7 +5362,7 @@ xtend@~2.1.1:
   dependencies:
     object-keys "~0.4.0"
 
-xterm@theia-ide/xterm.js#v3-built:
+"xterm@github:theia-ide/xterm.js#v3-built":
   version "2.9.1"
   resolved "https://codeload.github.com/theia-ide/xterm.js/tar.gz/e2aca68c8d5a64320d26b889d2c8d3f4510d4805"
 

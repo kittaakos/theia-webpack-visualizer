@@ -10,6 +10,7 @@ export class DefaultWebpackVisualizer implements WebpackVisualizer {
 
     async getDependencyData(confFileUri: string): Promise<string | undefined> {
         const selectedFile = new URI(confFileUri);
-        return "{data:'" + selectedFile.path + Visualizer + "'}";
+        log(Visualizer);
+        return "{data:'" + selectedFile.path + "'}";
     }
 }

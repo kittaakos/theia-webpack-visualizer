@@ -1,10 +1,13 @@
 import 'mocha';
-import { expect } from 'chai';
+import { expect, assert} from 'chai';
+import { DefaultWebpackVisualizer } from './default-webpack-visualizer';
 
 describe('webpack-visualizer', () => {
 
-    it('generate', () => {
-        expect(true).to.be.true;
+    it('generate', async () => {
+        const vis = new DefaultWebpackVisualizer;
+        const result =  await vis.getDependencyData('test')
+        assert(result == "{data:'test'}", 'Wrong result');
     });
 
     it('bumm!', () => {
