@@ -7,6 +7,7 @@ import { WebpackVisualizer } from '../common/index';
 import { WebpackDependencyWidget, DEPENDENCY_WIDGET_FACTORY_ID } from './theia-webpack-dependency-widget';
 import { FrontendApplication } from '@theia/core/lib/browser';
 import { setTimeout } from 'timers';
+import { VisualizerResult } from '../common/webpack-visualizer-protocol';
 
 export const TheiaWebpackVisualizerCommand = {
     id: 'TheiaWebpackVisualizer.command',
@@ -33,18 +34,17 @@ export class TheiaWebpackVisualizerCommandContribution implements CommandContrib
             execute: async () => {
                 const selection = this.selectionService.selection;
                 if (UriSelection.is(selection)) {
-                    const result = await this.visualizer.visualizeDependency(selection.uri.toString());
-                    if (result.success) {
-                        const dependencyWidget = await this.widgetManager.getOrCreateWidget<WebpackDependencyWidget>(DEPENDENCY_WIDGET_FACTORY_ID);
+                    const dependencyWidget = await this.widgetManager.getOrCreateWidget<WebpackDependencyWidget>(DEPENDENCY_WIDGET_FACTORY_ID);
+                    const updateContent = (result: VisualizerResult | undefined) => {
                         if (dependencyWidget.isAttached) {
                             this.app.shell.activateMain(dependencyWidget.id);
                         } else {
                             this.app.shell.addToMainArea(dependencyWidget);
                         }
-                        setTimeout(() => dependencyWidget.setSource(result.url), 0);
-                    } else {
-                        this.messageService.error(result.message);
+                        setTimeout(() => dependencyWidget.result = result, 0);
                     }
+                    updateContent(undefined);
+                    updateContent(await this.visualizer.visualizeDependency(selection.uri.toString()));
                 }
             },
             isEnabled: () => {

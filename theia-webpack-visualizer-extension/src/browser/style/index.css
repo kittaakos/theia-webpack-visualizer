@@ -1,0 +1,13 @@
+.p-Widget .theia-webpack-visualizer-extension-container {
+    font-size: var(--theia-ui-font-size1);
+    color: var(--theia-ui-font-color0);
+    margin: 5px;
+    margin: auto;
+    margin-top: 5px;
+    height: inherit;
+}
+
+.p-Widget .theia-webpack-visualizer-extension-container-frame {
+    height: 100%;
+    width: 99%
+}

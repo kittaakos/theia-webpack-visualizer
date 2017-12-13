@@ -5,6 +5,8 @@ import { WebpackVisualizer, webpackServicePath} from '../common';
 import { WebSocketConnectionProvider, WidgetFactory} from '@theia/core/lib/browser';
 import { DEPENDENCY_WIDGET_FACTORY_ID, WebpackDependencyWidget } from './theia-webpack-dependency-widget';
 
+import '../../src/browser/style/index.css';
+
 export default new ContainerModule(bind => {
     bind(CommandContribution).to(TheiaWebpackVisualizerCommandContribution);
     bind(MenuContribution).to(TheiaWebpackVisualizerMenuContribution);
