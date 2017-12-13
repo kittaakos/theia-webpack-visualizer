@@ -1,10 +1,13 @@
+import * as crypto from 'crypto';
+import * as http from 'http';
+import * as express from 'express';
 import * as path from 'path';
 import * as webpack from 'webpack';
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { Compiler, MultiCompiler, Configuration, Plugin, Stats } from 'webpack';
 import { FileUri } from '@theia/core/lib/node/file-uri';
+import { BackendApplicationContribution } from '@theia/core/lib/node/backend-application';
 import { WebpackVisualizer, VisualizerResult } from "../common";
-import { FileSystem } from '@theia/filesystem/lib/common';
 
 export const WebpackVisualizerPlugin: WebpackVisualizerPlugin & Plugin = require('webpack-visualizer-plugin');
 
@@ -20,12 +23,23 @@ export namespace WebpackVisualizerPlugin {
 }
 
 @injectable()
-export class DefaultWebpackVisualizer implements WebpackVisualizer {
+export class DefaultWebpackVisualizer implements WebpackVisualizer, BackendApplicationContribution {
 
-    constructor( @inject(FileSystem) protected fileSystem: FileSystem) {
+    private app: express.Application | undefined;
+    private server: http.Server | undefined;
+
+    configure(app: express.Application): void {
+        this.app = app;
+    }
+
+    onStart(server: http.Server): void {
+        this.server = server;
     }
 
     async visualizeDependency(webpackConfigFileUri: string): Promise<VisualizerResult> {
+        if (this.app === undefined || this.server === undefined) {
+            throw new Error(`Backend configuration error.`)
+        }
         const configuration: Configuration = require(FileUri.fsPath(webpackConfigFileUri));
         if (configuration.output === undefined || configuration.output.path === undefined) {
             return {
@@ -50,17 +64,15 @@ export class DefaultWebpackVisualizer implements WebpackVisualizer {
                     })
                     return;
                 }
-                const uri = FileUri.create(path.join(outputPath, 'stats.html'));
+                const statPath = path.join(outputPath, 'stats.html');
+                const statName = this.md5(webpackConfigFileUri);
+                const { address, port } = this.server!.address();
+                const url = `http://${address}:${port}/${statName}`;
+                this.app!.get(`/${statName}`, (request, response) => response.sendFile(statPath));
                 try {
-
-                } catch (error) {
-
-                }
-                try {
-                    const html = (await this.fileSystem.resolveContent(uri.toString())).content;
                     resolve({
                         success: true,
-                        html
+                        url
                     });
                 } catch (error) {
                     resolve(this.toResult(error));
@@ -76,6 +88,10 @@ export class DefaultWebpackVisualizer implements WebpackVisualizer {
             message,
             stack
         };
+    }
+
+    private md5(data: string): string {
+        return crypto.createHash('md5').update(data).digest("hex")
     }
 
 }

@@ -13,5 +13,5 @@ export interface WebpackVisualizer {
 }
 
 export type VisualizerResult = 
-    { success: true, html: string } |
+    { success: true, url: string } |
     { success: false, message: string, stack?: string };

@@ -10,10 +10,12 @@
   ],
   "dependencies": {
     "@theia/core": "latest",
+    "@types/express": "^4.0.36",
     "@theia/filesystem": "latest",
     "@theia/messages": "latest",
     "@theia/navigator": "latest",
     "@types/webpack": "^2.2.1",
+    "express": "^4.15.3",
     "webpack": "^2.2.1",
     "webpack-visualizer-plugin": "^0.1.11"
   },
