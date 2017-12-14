@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { h } from '@phosphor/virtualdom/lib';
-import { VirtualWidget } from '@theia/core/lib/browser/widgets/virtual-widget';
+import { VirtualWidget, VirtualRenderer } from '@theia/core/lib/browser';
 import { VisualizerResult } from '../common/webpack-visualizer-protocol';
 
 export const DEPENDENCY_WIDGET_FACTORY_ID = 'webpack-dependency-graph';
@@ -20,33 +20,36 @@ export class WebpackDependencyWidget extends VirtualWidget {
     }
 
     render(): h.Child {
-        const src = this.src;
-        const frame = h.iframe({
-            height: '100%',
-            width: '99%',
-            src,
-            style: {
-                
+        let child: h.Child | null = null;
+        if (this._result) {
+            if (this._result.success) {
+                const frame = h.iframe({
+                    height: '100%',
+                    width: '99%',
+                    src: this._result.url
+                });
+                child = h.div({ style: { height: 'inherit' } }, frame);
+            } else {
+                const className = 'webpack-visualizer-container';
+                const children = [
+                    h.div({ className }, 'Error occurred while calculating the dependencies.'),
+                    h.div({ className }, this._result.message)
+                ];
+                if (this._result.stack) {
+                    h.div({ className }, this._result.stack);
+                }
+                child = h.div({ className: 'webpack-visualizer-container' }, VirtualRenderer.flatten(children));
             }
-        });
-        return h.div({ style: { height: 'inherit' } }, frame);
+        } else {
+            const spinner = h.div({ className: 'fa fa-spinner fa-pulse fa-3x fa-fw' }, '');
+            child = h.div({ className: 'webpack-visualizer-spinner-container' }, spinner);
+        }
+        return child;
     }
 
     set result(result: VisualizerResult | undefined) {
         this._result = result;
         this.update();
-    }
-
-    private get src(): string {
-        if (this._result) {
-            if (this._result.success) {
-                return this._result.url;
-            } else {
-                return `data:text/html;charset=utf-8,Error while calculating dependencies: ${this._result.message}`;
-            }
-        } else {
-            return `data:text/html;charset=utf-8,Calculating webpack dependency graph...`;
-        }
     }
 
 }
