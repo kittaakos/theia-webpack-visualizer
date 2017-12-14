@@ -27,5 +27,14 @@ iframe {
     margin: 5px;
     margin: auto;
     margin-top: 5px;
-    height: inherit;
+}
+
+.webpack-visualizer-container-preformatted {
+    font-size: var(--theia-ui-font-size1);
+    color: var(--theia-ui-font-color0);
+    margin: 5px;
+    margin: auto;
+    margin-top: 5px;
+    font-family: monospace;
+    white-space: pre;
 }

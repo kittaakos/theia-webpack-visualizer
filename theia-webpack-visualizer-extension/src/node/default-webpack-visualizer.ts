@@ -40,45 +40,49 @@ export class DefaultWebpackVisualizer implements WebpackVisualizer, BackendAppli
         if (this.app === undefined || this.server === undefined) {
             throw new Error(`Backend configuration error.`)
         }
-        const configuration: Configuration = require(FileUri.fsPath(webpackConfigFileUri));
-        if (configuration.output === undefined || configuration.output.path === undefined) {
-            return {
-                success: false,
-                message: 'Output location was not specified in the webpack configuration.'
+        try {
+            const configuration: Configuration = require(FileUri.fsPath(webpackConfigFileUri));
+            if (configuration.output === undefined || configuration.output.path === undefined) {
+                return {
+                    success: false,
+                    message: 'Output location was not specified in the webpack configuration.'
+                }
             }
-        }
-        const outputPath = configuration.output.path;
-        const compiler = webpack(configuration);
-        const visualizer = new WebpackVisualizerPlugin();
-        compiler.apply(visualizer);
-        return new Promise<VisualizerResult>((resolve, reject) => {
-            compiler.run(async (err: Error, stats: Stats) => {
-                if (err) {
-                    resolve(this.toResult(err));
-                    return;
-                }
-                if (stats.hasErrors()) {
-                    resolve({
-                        success: false,
-                        message: stats.toString('normal')
-                    })
-                    return;
-                }
-                const statPath = path.join(outputPath, 'stats.html');
-                const statName = this.md5(webpackConfigFileUri);
-                const { address, port } = this.server!.address();
-                const url = `http://${address}:${port}/${statName}`;
-                this.app!.get(`/${statName}`, (request, response) => response.sendFile(statPath));
-                try {
-                    resolve({
-                        success: true,
-                        url
-                    });
-                } catch (error) {
-                    resolve(this.toResult(error));
-                }
+            const outputPath = configuration.output.path;
+            const compiler = webpack(configuration);
+            const visualizer = new WebpackVisualizerPlugin();
+            compiler.apply(visualizer);
+            return new Promise<VisualizerResult>((resolve, reject) => {
+                compiler.run(async (err: Error, stats: Stats) => {
+                    if (err) {
+                        resolve(this.toResult(err));
+                        return;
+                    }
+                    if (stats.hasErrors()) {
+                        resolve({
+                            success: false,
+                            message: stats.toString('normal')
+                        })
+                        return;
+                    }
+                    const statPath = path.join(outputPath, 'stats.html');
+                    const statName = this.md5(webpackConfigFileUri);
+                    const { address, port } = this.server!.address();
+                    const url = `http://${address}:${port}/${statName}`;
+                    this.app!.get(`/${statName}`, (request, response) => response.sendFile(statPath));
+                    try {
+                        resolve({
+                            success: true,
+                            url
+                        });
+                    } catch (error) {
+                        resolve(this.toResult(error));
+                    }
+                });
             });
-        });
+        } catch (error) {
+            return this.toResult(error);
+        }
     }
 
     private toResult(error: Error): VisualizerResult {

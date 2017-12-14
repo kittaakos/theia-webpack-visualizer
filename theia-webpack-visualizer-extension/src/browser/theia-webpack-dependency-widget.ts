@@ -32,13 +32,13 @@ export class WebpackDependencyWidget extends VirtualWidget {
             } else {
                 const className = 'webpack-visualizer-container';
                 const children = [
-                    h.div({ className }, 'Error occurred while calculating the dependencies.'),
-                    h.div({ className }, this._result.message)
+                    h.div({ className }, 'Error occurred while calculating the webpack dependencies.'),
+                    h.div({ className }, `Reason: ${this._result.message}`)
                 ];
                 if (this._result.stack) {
-                    h.div({ className }, this._result.stack);
+                    children.push(h.div({ className: 'webpack-visualizer-container-preformatted' }, this._result.stack));
                 }
-                child = h.div({ className: 'webpack-visualizer-container' }, VirtualRenderer.flatten(children));
+                child = VirtualRenderer.flatten(children);
             }
         } else {
             const spinner = h.div({ className: 'fa fa-spinner fa-pulse fa-3x fa-fw' }, '');
